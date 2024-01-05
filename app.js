@@ -2,7 +2,9 @@ const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
 const dbConnect = require("./config/db");
+
 require('dotenv').config(); 
+const serverUrl = process.env.CHAT_APP_SERVER_URL
 
 
 const conversationsAPI = require("./src/routes/conversationRoutes");
@@ -36,7 +38,7 @@ let servers = [];
 
 const getData = async () => {
   try {
-    const response = await axios.get(`https://chatappserver-34od.onrender.com/chat`);
+    const response = await axios.get(`${serverUrl}/chat`);
     console.log("Data retrieved successfully:", response.data);
     // Assuming 'servers' is declared somewhere in the scope.
     servers = response.data;
@@ -72,7 +74,7 @@ wss.on("connection", function connection(ws) {
   
         if (serverWithSpace) {
           // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`https://chatappserver-34od.onrender.com/chat/${serverWithSpace._id}`, {
+          const response = await axios.patch(`${serverUrl}/${serverWithSpace._id}`, {
             pair: [...serverWithSpace.pair, clientId],
             chat: [...serverWithSpace.chat, { message:'*** You are now connected, say Hi. ***', user: 0 }],
             status: 0
@@ -80,12 +82,12 @@ wss.on("connection", function connection(ws) {
           console.log(response.data.message); // Should print "Client added to server successfully"
         } else {
           // No server with available space, add a new server
-          const response = await axios.post(`https://chatappserver-34od.onrender.com/chat`, postData);
+          const response = await axios.post(`${serverUrl}/chat`, postData);
           console.log(response.data.message); // Should print "Server created successfully"
         }
       } else {
         // No servers available, add a new server
-        const response = await axios.post(`https://chatappserver-34od.onrender.com/chat`, postData);
+        const response = await axios.post(`${serverUrl}/chat`, postData);
         console.log(response.data.message); // Should print "Server created successfully"
       }
   
