@@ -49,7 +49,7 @@ const getData = async () => {
   }
 };
 
-
+console.log(serverUrl)
 
 
 wss.on("connection", function connection(ws) {
