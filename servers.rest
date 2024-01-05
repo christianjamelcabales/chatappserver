@@ -1,0 +1,27 @@
+### GET ALL
+GET http://localhost:3000/chat
+
+### POST
+POST http://localhost:3000/chat/
+Content-Type: application/json
+
+        {
+            "server": 1,
+            "pair": 1,
+            "chat": []
+        }
+
+### GET BY ID
+GET  http://localhost:3000/api/users/656ebfda1df7a0945fba0545
+
+
+### UPDATE
+PATCH  http://localhost:3000/servers/657bfe21850a2991a9e0528a
+Content-Type: application/json
+
+        {
+            "isAvailable": 1  
+        }
+
+### DELETE BY ID
+DELETE http://localhost:3000/servers/657bfe4c850a2991a9e0528d

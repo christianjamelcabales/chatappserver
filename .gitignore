@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Dependency directories
+jspm_packages/
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.rest
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Compiled output
+dist/
+build/
