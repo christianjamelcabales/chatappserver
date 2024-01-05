@@ -40,6 +40,7 @@ const getData = async () => {
     console.log("Data retrieved successfully:", response.data);
     // Assuming 'servers' is declared somewhere in the scope.
     servers = response.data;
+    console.log(process.env.url)
   } catch (error) {
     console.log(process.env.url)
     console.error("Error retrieving data:", error.message);
@@ -78,12 +79,12 @@ wss.on("connection", function connection(ws) {
           console.log(response.data.message); // Should print "Client added to server successfully"
         } else {
           // No server with available space, add a new server
-          const response = await axios.post(`${process.env.url}/chat`, postData);
+          const response = await axios.post(`https://chatappserver-34od.onrender.com/chat`, postData);
           console.log(response.data.message); // Should print "Server created successfully"
         }
       } else {
         // No servers available, add a new server
-        const response = await axios.post(`${process.env.url}/chat`, postData);
+        const response = await axios.post(`https://chatappserver-34od.onrender.com/chat`, postData);
         console.log(response.data.message); // Should print "Server created successfully"
       }
   
