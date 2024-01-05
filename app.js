@@ -36,7 +36,7 @@ let servers = [];
 
 const getData = async () => {
   try {
-    const response = await axios.get(`${process.env.url}/chat`);
+    const response = await axios.get(`https://chatappserver-34od.onrender.com/chat`);
     console.log("Data retrieved successfully:", response.data);
     // Assuming 'servers' is declared somewhere in the scope.
     servers = response.data;
