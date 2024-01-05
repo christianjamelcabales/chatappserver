@@ -182,7 +182,7 @@ ws.on("close", async function  close() {
       let convo = servers.find((item) => item.pair.includes(clientId));
         convo.pair.push(0)
         await axios.patch(
-          `${serverUrl}/chat.${convo._id}`,
+          `${serverUrl}/chat/${convo._id}`,
           {
             pair: convo.pair,
             chat: [
