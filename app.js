@@ -3,8 +3,9 @@ const http = require("http");
 const WebSocket = require("ws");
 const dbConnect = require("./config/db");
 
+
 require('dotenv').config(); 
-const serverUrl = process.env.SERVER_URL
+const serverUrl = process.env.SERVER_URL || 'https://chatappserver-34od.onrender.com'
 
 
 const conversationsAPI = require("./src/routes/conversationRoutes");
