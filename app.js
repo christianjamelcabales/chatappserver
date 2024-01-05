@@ -46,7 +46,7 @@ const getData = async () => {
     console.error("Error retrieving data:", error.message);
   }
 };
-getData()
+
 
 
 
@@ -65,13 +65,14 @@ wss.on("connection", function connection(ws) {
   };
   
   async function updateOrCreateServer() {
+    await getData()
     try {
       if (servers.length >= 1) {
         let serverWithSpace = servers.find((item) => item.pair.length < 2);
   
         if (serverWithSpace) {
           // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`${process.env.url}/${serverWithSpace._id}`, {
+          const response = await axios.patch(`https://chatappserver-34od.onrender.com/chat/${serverWithSpace._id}`, {
             pair: [...serverWithSpace.pair, clientId],
             chat: [...serverWithSpace.chat, { message:'*** You are now connected, say Hi. ***', user: 0 }],
             status: 0
