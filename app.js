@@ -34,9 +34,9 @@ let servers = [];
 
 const getData = async () =>{
   axios
-  .get("http://localhost:3000/chat")
+  .get(`${import.meta.env.url}/chat`)
   .then((response) => {
-    //console.log("Data retrieved successfully:", response.data);
+    console.log("Data retrieved successfully:", response.data);
     servers = response.data;
   })
   .catch((error) => {
@@ -68,7 +68,7 @@ wss.on("connection", function connection(ws) {
   
         if (serverWithSpace) {
           // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`http://localhost:3000/chat/${serverWithSpace._id}`, {
+          const response = await axios.patch(`${import.meta.env.url}/${serverWithSpace._id}`, {
             pair: [...serverWithSpace.pair, clientId],
             chat: [...serverWithSpace.chat, { message:'*** You are now connected, say Hi. ***', user: 0 }],
             status: 0
@@ -76,12 +76,12 @@ wss.on("connection", function connection(ws) {
           console.log(response.data.message); // Should print "Client added to server successfully"
         } else {
           // No server with available space, add a new server
-          const response = await axios.post('http://localhost:3000/chat', postData);
+          const response = await axios.post(`${import.meta.env.url}/chat`, postData);
           console.log(response.data.message); // Should print "Server created successfully"
         }
       } else {
         // No servers available, add a new server
-        const response = await axios.post('http://localhost:3000/chat', postData);
+        const response = await axios.post(`${import.meta.env.url}/chat`, postData);
         console.log(response.data.message); // Should print "Server created successfully"
       }
   
@@ -124,7 +124,7 @@ wss.on("connection", function connection(ws) {
         // Add the string message to the conversation's chat array
         if (stringMessage!=='!@#$%^&*') {
           // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`http://localhost:3000/chat/${convo._id}`, {
+          const response = await axios.patch(`${import.meta.env.url}/chat/${convo._id}`, {
             chat: [...convo.chat, {user:clientId, message: stringMessage}],
           });
           getData(); 
@@ -174,7 +174,7 @@ ws.on("close", function close() {
       let convo = await servers.find((item) => item.pair.includes(clientId));
         convo.pair.push(0)
         const disconnected = await axios.patch(
-          `http://localhost:3000/chat/${convo._id}`,
+          `${import.meta.env.url}/chat.${convo._id}`,
           {
             pair: convo.pair,
             chat: [
@@ -186,7 +186,7 @@ ws.on("close", function close() {
         console.log(convo.pair)
         if(convo.pair.length===2 && convo.pair.includes(0) || convo.pair.length===4){
           const disconnected = await axios.delete(
-            `http://localhost:3000/chat/${convo._id}`
+            `${import.meta.env.url}/chat/${convo._id}`
           );
         }
     } catch (error) {
