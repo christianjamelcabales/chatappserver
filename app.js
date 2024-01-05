@@ -43,9 +43,9 @@ const getData = async () => {
     console.log("Data retrieved successfully:", response.data);
     // Assuming 'servers' is declared somewhere in the scope.
     servers = response.data;
-    console.log(process.env.url)
+    console.log(serverUrl)
   } catch (error) {
-    console.log(process.env.url)
+    console.log(serverUrl)
     console.error("Error retrieving data:", error.message);
   }
 };
@@ -156,7 +156,7 @@ wss.on("connection", function connection(ws) {
   });
 
 // Handle client disconnection
-ws.on("close", function close() {
+ws.on("close", async function  close() {
   // Decrement the connected clients count
   connectedClients--;
   const indexToRemove = clientsonline.indexOf(clientId);
@@ -177,10 +177,11 @@ ws.on("close", function close() {
   });
 
   const deleteConvo = async () => {
+    await getData()
     try {
-      let convo = await servers.find((item) => item.pair.includes(clientId));
+      let convo = servers.find((item) => item.pair.includes(clientId));
         convo.pair.push(0)
-        const disconnected = await axios.patch(
+        await axios.patch(
           `${serverUrl}/chat.${convo._id}`,
           {
             pair: convo.pair,
@@ -192,17 +193,18 @@ ws.on("close", function close() {
         );
         console.log(convo.pair)
         if(convo.pair.length===2 && convo.pair.includes(0) || convo.pair.length===4){
-          const disconnected = await axios.delete(
+          await axios.delete(
             `${serverUrl}/chat/${convo._id}`
           );
         }
+        console.log()
     } catch (error) {
       console.log(error.data);
     }
     
   };
 
-  deleteConvo();
+  await deleteConvo();
   
   //getData();
 
