@@ -36,7 +36,7 @@ const getData = async () =>{
   axios
   .get("http://localhost:3000/chat")
   .then((response) => {
-    console.log("Data retrieved successfully:", response.data);
+    //console.log("Data retrieved successfully:", response.data);
     servers = response.data;
   })
   .catch((error) => {
@@ -212,7 +212,7 @@ ws.on("close", function close() {
 dbConnect();
 
 // Start the combined server
-const port = 3000;
+const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
