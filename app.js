@@ -75,7 +75,7 @@ wss.on("connection", function connection(ws) {
   
         if (serverWithSpace) {
           // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`${serverUrl}/${serverWithSpace._id}`, {
+          const response = await axios.patch(`${serverUrl}/chat/${serverWithSpace._id}`, {
             pair: [...serverWithSpace.pair, clientId],
             chat: [...serverWithSpace.chat, { message:'*** You are now connected, say Hi. ***', user: 0 }],
             status: 0
@@ -131,7 +131,7 @@ wss.on("connection", function connection(ws) {
         // Add the string message to the conversation's chat array
         if (stringMessage!=='!@#$%^&*') {
           // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`${process.env.url}/chat/${convo._id}`, {
+          const response = await axios.patch(`${serverUrl}/chat/${convo._id}`, {
             chat: [...convo.chat, {user:clientId, message: stringMessage}],
           });
           getData(); 
@@ -181,7 +181,7 @@ ws.on("close", function close() {
       let convo = await servers.find((item) => item.pair.includes(clientId));
         convo.pair.push(0)
         const disconnected = await axios.patch(
-          `${process.env.url}/chat.${convo._id}`,
+          `${serverUrl}/chat.${convo._id}`,
           {
             pair: convo.pair,
             chat: [
@@ -193,7 +193,7 @@ ws.on("close", function close() {
         console.log(convo.pair)
         if(convo.pair.length===2 && convo.pair.includes(0) || convo.pair.length===4){
           const disconnected = await axios.delete(
-            `${process.env.url}/chat/${convo._id}`
+            `${serverUrl}/chat/${convo._id}`
           );
         }
     } catch (error) {
