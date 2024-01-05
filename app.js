@@ -4,7 +4,7 @@ const WebSocket = require("ws");
 const dbConnect = require("./config/db");
 
 require('dotenv').config(); 
-const serverUrl = process.env.CHAT_APP_SERVER_URL
+const serverUrl = process.env.SERVER_URL
 
 
 const conversationsAPI = require("./src/routes/conversationRoutes");
