@@ -2,6 +2,8 @@ const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
 const dbConnect = require("./config/db");
+require('dotenv').config(); 
+
 
 const conversationsAPI = require("./src/routes/conversationRoutes");
 
@@ -32,17 +34,17 @@ const clientsonline = [];
 
 let servers = [];
 
-const getData = async () =>{
-  axios
-  .get(`${process.env.url}/chat`)
-  .then((response) => {
+const getData = async () => {
+  try {
+    const response = await axios.get(`${process.env.url}/chat`);
     console.log("Data retrieved successfully:", response.data);
+    // Assuming 'servers' is declared somewhere in the scope.
     servers = response.data;
-  })
-  .catch((error) => {
+  } catch (error) {
+    console.log(process.env.url)
     console.error("Error retrieving data:", error.message);
-  });
-}
+  }
+};
 getData()
 
 
