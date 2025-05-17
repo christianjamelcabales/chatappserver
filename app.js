@@ -21,7 +21,7 @@ const wss = new WebSocket.Server({ server });
 
 // Your Express routes
 app.get("/", (req, res) => {
-  res.send("Hello Worlds!");
+  res.send("Chatapp Backend");
 });
 
 app.use("/chat", conversationsAPI);
@@ -68,37 +68,45 @@ wss.on("connection", function connection(ws) {
   };
   
   async function updateOrCreateServer() {
-    await getData()
     try {
+      await getData(); // Ensure the latest server list is fetched
+  
       if (servers.length >= 1) {
         let serverWithSpace = servers.find((item) => item.pair.length < 2);
   
         if (serverWithSpace) {
-          // Make a PATCH request to update the server with the new clientId
-          const response = await axios.patch(`${serverUrl}/chat/${serverWithSpace._id}`, {
-            pair: [...serverWithSpace.pair, clientId],
-            chat: [...serverWithSpace.chat, { message:'*** You are now connected, say Hi. ***', user: 0 }],
-            status: 0
-          });
-          console.log(response.data.message); // Should print "Client added to server successfully"
+          // Re-fetch the specific server to ensure it still has space
+          const { data: latestServer } = await axios.get(`${serverUrl}/chat/${serverWithSpace._id}`);
+  
+          if (latestServer.pair.length < 2) {
+            const response = await axios.patch(`${serverUrl}/chat/${latestServer._id}`, {
+              pair: [...latestServer.pair, clientId],
+              chat: [...latestServer.chat, { message: '*** You are now connected, say Hi. ***', user: 0 }],
+              status: 0
+            });
+            console.log(response.data.message); // Should print "Client added to server successfully"
+          } else {
+            console.log("Server is full. Creating a new server.");
+            const response = await axios.post(`${serverUrl}/chat`, postData);
+            console.log(response.data.message); // Should print "Server created successfully"
+          }
         } else {
-          // No server with available space, add a new server
+          // No server with available space, create a new one
           const response = await axios.post(`${serverUrl}/chat`, postData);
           console.log(response.data.message); // Should print "Server created successfully"
         }
       } else {
-        // No servers available, add a new server
+        // No servers available, create a new one
         const response = await axios.post(`${serverUrl}/chat`, postData);
         console.log(response.data.message); // Should print "Server created successfully"
       }
   
-      // Assuming getData() is an asynchronous function, you may want to await it as well
-      await getData();
-
+      await getData(); // Refresh the data after changes
     } catch (error) {
       console.error("Error:", error);
     }
   }
+  
   
   // Call the function
   updateOrCreateServer();
